@@ -13,25 +13,25 @@ $FileTypesToOrganize = @("*.jpg","*.jpeg","*.mp4","*.png","*.mov","*.m4v","*.gif
 function getImageDateTaken($file){
     try
     {
-	    $tempbitmap=New-Object -TypeName system.drawing.bitmap -ArgumentList $file.fullname
-	    $date=$tempbitmap.GetPropertyItem(36867).value[0..9]
-	    $arYear = [Char]$date[0],[Char]$date[1],[Char]$date[2],[Char]$date[3]
+	$tempbitmap=New-Object -TypeName system.drawing.bitmap -ArgumentList $file.fullname
+	$date=$tempbitmap.GetPropertyItem(36867).value[0..9]
+	$arYear = [Char]$date[0],[Char]$date[1],[Char]$date[2],[Char]$date[3]
         $arMonth = [Char]$date[5],[Char]$date[6]
         $arDay = [Char]$date[8],[Char]$date[9]
         $strYear = [String]::Join("",$arYear)
         $strMonth = [String]::Join("",$arMonth) 
         $strDay = [String]::Join("",$arDay)
         $DateTaken = $strYear + "-" + $strMonth + "-" + $strDay
-	    $new_folder_name= $strYear + "\" + $strMonth
-	    Write-Host "Date Taken sort"
+	$new_folder_name= $strYear + "\" + $strMonth
+	Write-Host "Date Taken sort"
         Remove-Variable tempbitmap
         return $new_folder_name
     }
     catch [System.Management.Automation.MethodInvocationException]
     {
         write-host "ERROR DURING PICTURE TAKEN EXTRACTION FOR FILE $file"
-		write-host "ACQUIRING DEFAULT MODIFIE DATE"
-		$temp_date = GetDEfaultModifiedDate($file)
+	write-host "ACQUIRING DEFAULT MODIFIED DATE"
+	$temp_date = GetDefaultModifiedDate($file)
         return $temp_date
     }
 }
@@ -48,8 +48,8 @@ function getVideoMediaCreated($file){
     }
     catch {
         write-host "ERROR DURING MEDIA CREATED EXTRACTION FOR FILE $file"
-		write-host "ACQUIRING DEFAULT MODIFIE DATE"
-		$temp_date = GetDEfaultModifiedDate($file)
+	write-host "ACQUIRING DEFAULT MODIFIE DATE"
+	$temp_date = GetDefaultModifiedDate($file)
         return $temp_date
     }
 }
@@ -102,7 +102,7 @@ foreach ($file in $toSort) {
     }
 	if (test-path $des_path)
 	{
-	$full_path = $des_path + "\" + $file.name
+		$full_path = $des_path + "\" + $file.name
 	if (test-path $full_path -PathType leaf)
 	{
 		write-host "FILE NOT COPIED"
@@ -110,18 +110,18 @@ foreach ($file in $toSort) {
 	}
 	else 
 	{
-        $removeErrors = @()
+        	$removeErrors = @()
 		xcopy /Y /Q $file.fullname $des_path
-        #remove-item $file.fullname -ErrorAction SilentlyContinue -ErrorVariable removeErrors -Force
-        write-host ""
+        	#remove-item $file.fullname -ErrorAction SilentlyContinue -ErrorVariable removeErrors -Force
+        	write-host ""
 	}
 	}
 	else
 	{
 		new-item -ItemType directory -Path $des_path
 		xcopy /Y /Q $file.fullname $des_path
-        #remove-item $file.fullname -ErrorAction SilentlyContinue -ErrorVariable removeErrors -Force
-        write-host ""
+        	#remove-item $file.fullname -ErrorAction SilentlyContinue -ErrorVariable removeErrors -Force
+        	write-host ""
 	}
 }
 
